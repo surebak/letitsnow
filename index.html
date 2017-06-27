@@ -1,1 +1,301 @@
-My Page
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Let it snow</title>
+    <link rel="manifest" href="manifest.json" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Let it snow">
+    <meta name="theme-color" content="#222">
+    <link rel="icon" href="icon.png">
+    <link rel="apple-touch-icon" href="apple_icon.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="owl.carousel.css">
+    <link rel="stylesheet" href="owl.theme.css">
+    <meta property="og:url" content="http://surebak.com/snow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Let it snow" />
+    <meta property="og:description" content="Make your own snowflake!" />
+    <meta property="og:image" content="snow_og.jpg" />
+    <script src="js/aframe.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+</head>
+
+<body>
+    <div class="onboard">
+        <h1>Let it snow</h1>
+        <div class="btn_close">Skip</div>
+        <div class="tips">
+            <div class="cont" id="owl-demo" class="owl-carousel owl-theme">
+                <div class="item">
+                    <img src="tip_1.png" alt="">
+                    <p>Draw lines to cut out the paper.</p>
+                </div>
+                <div class="item">
+                    <img src="tip_2.png" alt="">
+                    <p>Look up at the sky through your mobile device.</p>
+                </div>
+                <div class="item">
+                    <img src="tip_3.png" alt="">
+                    <p>Try the 360 degree snowing experience with VR headset.</p>
+                </div>
+                <div class="item with_btn">
+                    <img src="tip_5.png" alt="">
+                    <div class="btn">Start</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="lookup">
+        <div>
+        </div>
+        <p>Desktop - Drag up ↑ screen</p>
+    </div>
+    <div class="wrapper">
+        <canvas id="theCanvas"></canvas>
+        <canvas id="dotCanvas"></canvas>
+        <div class="cover left"></div>
+        <div class="cover right"></div>
+    </div>
+    <div class="btns">
+        <div class="preview">
+            <p>PREVIEW</p>
+            <p>EDIT</p>
+        </div>
+        <div class="start">
+            <p>Let it snow</p>
+            <p>Stop</p>
+        </div>
+        <div class="refill">
+            <p>Reset</p>
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="454.839px" height="454.839px" viewBox="0 0 454.839 454.839" style="enable-background:new 0 0 454.839 454.839;" xml:space="preserve">
+                <g>
+                    <path d="M404.908,283.853c0,94.282-76.71,170.986-170.986,170.986h-60.526c-10.03,0-18.158-8.127-18.158-18.157v-6.053
+        c0-10.031,8.127-18.158,18.158-18.158h60.526c70.917,0,128.618-57.701,128.618-128.618c0-70.917-57.701-128.618-128.618-128.618
+        H122.255l76.905,76.905c8.26,8.257,8.26,21.699,0,29.956c-8.015,8.009-21.964,7.997-29.961,0L56.137,149.031
+        c-4.001-4.001-6.206-9.321-6.206-14.981c0-5.656,2.205-10.979,6.206-14.978L169.205,6.002c7.997-8.003,21.958-8.003,29.956,0
+        c8.26,8.255,8.26,21.699,0,29.953l-76.905,76.911h111.666C328.198,112.866,404.908,189.573,404.908,283.853z" />
+                </g>
+            </svg>
+        </div>
+    </div>
+    <a-scene vr-mode-ui="enabled: true" inspector="url: https://aframe.io/releases/0.3.0/aframe-inspector.min.js" fog="type: linear; color: #222;near:1;far:100">
+        <a-assets>
+            <a-asset-item id="snowflake" src="plate_mirror.obj"></a-asset-item>
+            <img src="flake2.png" id="the_tile">
+        </a-assets>
+        <a-sky color="#000"></a-sky>
+        <a-light type="ambient" color="#444"></a-light>
+        <a-light type="point" color="#eee" position="0 0 0"></a-light>
+        <a-entity class="container" position="0 0 0" rotation="0 0 0">
+            <a-entity static-body class="sample" obj-model="obj: #snowflake;" scale=".2 .2 .2" position="0 0.3 -5" rotation="45 0 0" material="color:white;transparent:true;side:double">
+                <a-animation easing="linear" attribute="rotation" dur="10000" fill="forwards" to="45 360 0" repeat="indefinite"></a-animation>
+            </a-entity>
+            <a-entity id="myCam" camera position="0 0 0" rotation="0 0 0">
+            </a-entity>
+        </a-entity>
+    </a-scene>
+</body>
+<script src="js/owl.carousel.min.js"></script>
+<script>
+var num_snow = 120;
+
+var t;
+var d;
+var ttx;
+var dtx;
+var st_x;
+var st_y;
+var pre_x;
+var pre_y;
+var the_rand;
+
+function make_one() {
+    var ini_x = (Math.random() * 100 - 50);
+    var ini_y = (Math.random() * 100 + 100);
+    var ini_z = (Math.random() * 100 - 50);
+    var t_txt = '<a-entity class="snow" position="' + ini_x + ' ' + ini_y + ' ' + ini_z + '" rotation="0 0 0" obj-model="obj: #snowflake;" scale=".2 .2 .2" material="side:double;transparent:true;src:#the_tile"><a-animation attribute="position" easing="linear" dur="' + (Math.random() * 20000 + 15000) + '" fill="forwards" to="' + ini_x + ' ' + (Math.random() * 40 - 200) + ' ' + ini_z + '"></a-animation><a-animation attribute="rotation" easing="linear" dur="' + (Math.random() * 20000 + 15000) + '" fill="forwards" to="' + (Math.random() * 30) + ' ' + (Math.random() * 360) + ' 0"></a-animation></a-entity>'
+    $(t_txt).appendTo($('a-scene'))
+}
+
+function maintain() {
+    if ($('a-entity.snow').length < num_snow) {
+        make_one()
+    } else if ($('a-entity.snow').eq(0).attr('position').y < -100) {
+        $('a-entity.snow').eq(0).remove()
+    }
+}
+
+function snow() {
+    the_rand = setInterval(function() {
+        maintain()
+    }, 300)
+}
+
+$('.start').on('click', function() {
+    if ($('body').hasClass('snowing')) {
+        clearInterval(the_rand)
+        $('a-entity.snow').remove()
+        $('body').removeClass('snowing')
+        var t_txt = '<a-entity class="sample" obj-model="obj: #snowflake;" scale=".2 .2 .2" position="0 0.3 -5" rotation="45 0 0" material="src:#the_tile;transparent:true;side:double"><a-animation easing="linear" attribute="rotation" dur="10000" fill="forwards" to="45 360 0" repeat="indefinite"></a-animation></a-entity>'
+        $(t_txt).appendTo($('.container'))
+        $('#myCam').removeAttr('look-controls')
+        $('#myCam').attr('rotation', '0 0 0')
+        scene = document.querySelector('a-scene');
+        scene.exitVR();
+    } else {
+        $('body').addClass('snowing')
+        apply_img()
+        snow()
+        $('.sample').remove();
+        $('#myCam').attr('look-controls', '')
+        if ($('.lookup').length) {
+            setTimeout(function() {
+                $('.lookup').addClass('fade')
+            }, 2000)
+            setTimeout(function() {
+                $('.lookup').remove()
+            }, 3000)
+        }
+    }
+})
+
+
+var is_drawing = 0;
+$('.wrapper').on('click', function(e) {
+    var t_x = e.pageX - $('#theCanvas').offset().left;
+    var t_y = e.pageY - $('#theCanvas').offset().top;
+    var o_x = e.pageX - $(this).offset().left
+    var o_y = e.pageY - $(this).offset().top
+
+    if (is_drawing == 0) {
+        st_x = e.pageX
+        st_y = e.pageY
+        ttx.globalCompositeOperation = 'destination-out'
+        dtx.globalCompositeOperation = 'source-over'
+        ttx.beginPath();
+        dtx.beginPath();
+        ttx.moveTo(t_x, t_y);
+        dtx.moveTo(o_x, o_y);
+        is_drawing = 1
+        $('<div class="first dot" style="left:' + o_x + 'px;top:' + o_y + 'px;"></div>').appendTo($(this))
+    } else if (is_drawing > 0) {
+        var dist = Math.sqrt((e.pageX - st_x) * (e.pageX - st_x) + (e.pageY - st_y) * (e.pageY - st_y))
+        if (dist < 15) {
+            ttx.closePath();
+            ttx.fill();
+            dtx.closePath();
+            dtx.clearRect(0, 0, $('#dotCanvas').width(), $('#dotCanvas').height());
+            is_drawing = 0;
+            $('.dot').remove()
+            apply_img()
+        } else {
+            ttx.lineTo(t_x, t_y);
+            dtx.lineTo(o_x, o_y);
+            dtx.stroke();
+            is_drawing++
+            $('<div class="dot" style="left:' + o_x + 'px;top:' + o_y + 'px;"></div>').appendTo($(this))
+        }
+
+    }
+})
+$('.wrapper').on('mousemove', function(e) {
+    var dist = Math.sqrt((e.pageX - st_x) * (e.pageX - st_x) + (e.pageY - st_y) * (e.pageY - st_y))
+    if (dist < 15) {
+        $('.first').addClass('on')
+    } else {
+        $('.first').removeClass('on')
+    }
+})
+
+
+function apply_img() {
+    var dataUrl = t.toDataURL();
+    $('a-assets > img').attr('src', dataUrl)
+    $('.sample').remove();
+    var t_txt = '<a-entity class="sample" obj-model="obj: #snowflake;" scale=".2 .2 .2" position="0 0.3 -5" rotation="45 0 0" material="src:#the_tile;transparent:true;side:double"><a-animation easing="linear" attribute="rotation" dur="10000" fill="forwards" to="45 360 0" repeat="indefinite"></a-animation></a-entity>'
+    $(t_txt).appendTo($('.container'))
+}
+
+$('.preview').on('click', function() {
+    $('.wrapper').toggleClass('pre')
+    $(this).toggleClass('pre')
+    if ($('body').hasClass('sneak')) {
+        $('body').removeClass('sneak')
+    } else {
+        $('body').addClass('sneak')
+        apply_img()
+    }
+})
+
+function paper() {
+    $('#theCanvas').attr('height', $('.wrapper').height() * 0.7 * 2);
+    $('#theCanvas').attr('width', $('.wrapper').height() * 0.7 * 0.54838709677 * 2)
+    $('#dotCanvas').attr('width', $('.wrapper').width() * 2);
+    $('#dotCanvas').attr('height', $('.wrapper').height() * 2);
+    t = document.getElementById("theCanvas");
+    t.style.width = t.width / 2 + 'px'
+    t.style.height = t.height / 2 + 'px'
+    t.getContext('2d').scale(2, 2)
+    ttx = t.getContext("2d");
+    ttx.fillStyle = "rgba(255,255,255,1)";
+    ttx.fillRect(0, 0, $('#theCanvas').width(), $('#theCanvas').height())
+    $('.cover.right').css('top', ($('#theCanvas').offset().top - $('.wrapper').offset().top) + 'px')
+    $('.cover.left').css('top', ($('#theCanvas').offset().top - $('.wrapper').offset().top) + 'px')
+    $('.cover.right').css('left', (($('.wrapper').width() - $('#theCanvas').width()) / 2 + $('#theCanvas').width()) + 'px')
+    $('.cover.left').css('right', (($('.wrapper').width() - $('#theCanvas').width()) / 2 + $('#theCanvas').width()) + 'px')
+    d = document.getElementById("dotCanvas");
+    d.style.width = d.width / 2 + 'px'
+    d.style.height = d.height / 2 + 'px'
+    d.getContext('2d').scale(2, 2)
+    dtx = d.getContext("2d");
+    dtx.fillStyle = "rgba(255,0,0,1)";
+    dtx.strokeStyle = '#666';
+    dtx.setLineDash([2, 4]);
+    dtx.lineWidth = 1;
+}
+
+$(document).ready(function() {
+    paper()
+    $("#owl-demo").owlCarousel({
+
+        navigation: false,
+        slideSpeed: 300,
+        paginationSpeed: 400,
+        singleItem: true
+
+    });
+});
+
+$(window).resize(function() {
+    paper()
+})
+
+$('.refill').on('click', function() {
+    if (confirm('Are you sure you want to reset?')) {
+        ttx.closePath();
+        ttx.globalCompositeOperation = 'source-over'
+        ttx.fillRect(0, 0, $('#theCanvas').width(), $('#theCanvas').height())
+        dtx.clearRect(0, 0, $('#dotCanvas').width(), $('#dotCanvas').height());
+        dtx.closePath();
+        is_drawing = 0;
+        $('.dot').remove()
+        apply_img()
+    } else {
+
+    }
+
+})
+
+$('.btn').on('click', function() {
+    $('.onboard').remove()
+})
+$('.btn_close').on('click', function() {
+    $('.onboard').remove()
+})
+</script>
+
+</html>
